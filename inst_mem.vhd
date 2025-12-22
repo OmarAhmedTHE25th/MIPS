@@ -10,8 +10,7 @@ entity inst_mem is
 end inst_mem;
 
 architecture Behavioral of inst_mem is
-    -- Define a memory type (64 words of 32 bits each)
-    type ram_type is array (0 to 63) of std_logic_vector(31 downto 24); -- Byte array or
+  
     -- Simpler approach: define it as 32-bit words
     type mem_array is array (0 to 63) of std_logic_vector(31 downto 0);
     
@@ -30,9 +29,6 @@ begin
     -- Asynchronous read: instruction is output immediately based on address
     -- Note: Since MIPS addresses are usually byte-aligned, but this memory 
     -- is word-aligned, we use the address directly as the index.
-    process(a)
-    begin
-        rd <= mem(to_integer(unsigned(a)));
-    end process;
+   rd <= mem(to_integer(unsigned(a)));
 
 end Behavioral;

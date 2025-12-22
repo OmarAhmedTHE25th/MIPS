@@ -8,7 +8,7 @@ entity Datapath is
         reset       : in  std_logic;
         instr       : in  std_logic_vector(31 downto 0);
         aluoperation: in  std_logic_vector(3 downto 0);
-        zero        : buffer std_logic;
+        zero        : out std_logic;
         nflag       : out std_logic;  -- Negative flag for BLE
         regwrite    : in  std_logic;
         RegDst      : in  std_logic;
@@ -43,6 +43,9 @@ architecture Behavioral of Datapath is
     signal imm_ext              : std_logic_vector(31 downto 0); -- fixed to 32 bits
     signal alu_src_b, alu_result: std_logic_vector(31 downto 0);
 	 signal nflag_i : std_logic;
+	 signal zero_i : std_logic;
+
+
 
     -- Branch / PC signals
     signal branch_taken         : std_logic;
@@ -76,11 +79,11 @@ begin
             auto_incr => rf_incr_control,
             reg3_out     => debug_reg3,
             reg4_out     => debug_reg4,
-reg5_out     => debug_reg5,
-reg6_out     => debug_reg6,
-reg7_out     => debug_reg7,
-reg8_out     => debug_reg8,
-reg9_out     => debug_reg9,
+            reg5_out     => debug_reg5,
+            reg6_out     => debug_reg6,
+            reg7_out     => debug_reg7,
+            reg8_out     => debug_reg8,
+            reg9_out     => debug_reg9,
             write_data => write_data,
             data1      => rd1,
             data2      => rd2
@@ -127,7 +130,7 @@ reg9_out     => debug_reg9,
     end process;
 
     data_to_mux <= lwr_merged_data;  -- simplified for LW/LWR
-
+zero_i <= '1' when alu_result = x"00000000" else '0';
     -- 8. Write-back MUX
     Write_Back_Mux: entity work.mux2to1_32bit
         port map(
@@ -139,8 +142,8 @@ reg9_out     => debug_reg9,
 
     -- 9. Branch logic
     branch_taken <= '1' when
-    (branch = '1' and branch_type = "01" and zero = '1') or
-    (branch = '1' and branch_type = "10" and (zero = '1' or nflag_i = '1'))
+    (branch = '1' and branch_type = "01" and zero_i = '1') or
+    (branch = '1' and branch_type = "10" and (zero_i = '1' or nflag_i = '1'))
 else
     '0';
 
