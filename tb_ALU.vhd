@@ -26,27 +26,7 @@ architecture Behavioral of tb_ALU is
     signal dataout_s : std_logic_vector(31 downto 0);
     signal nflag_s   : std_logic;
     signal zflag_s   : std_logic;
-
-begin
-
-    UUT: ALU
-        port map (
-            data1   => data1_s,
-            data2   => data2_s,
-            aluop   => aluop_s,
-            dataout => dataout_s,
-            nflag   => nflag_s,
-            zflag   => zflag_s
-        );
-
-    -- Test process
-    stim_proc: process
-        -- local expected value vars
-        variable expected   : std_logic_vector(31 downto 0);
-        variable expected_n : std_logic;
-        variable expected_z : std_logic;
-    begin
-        -- Helper procedure to check outputs
+	 -- Helper procedure to check outputs
         procedure check_expectation(op_name : in string) is
         begin
             wait for 20 ns; -- allow outputs to settle
@@ -75,6 +55,27 @@ begin
                    integer'image(to_integer(signed(dataout_s))) severity note;
             wait for 30 ns;
         end procedure;
+
+begin
+
+    UUT: ALU
+        port map (
+            data1   => data1_s,
+            data2   => data2_s,
+            aluop   => aluop_s,
+            dataout => dataout_s,
+            nflag   => nflag_s,
+            zflag   => zflag_s
+        );
+
+    -- Test process
+    stim_proc: process
+        -- local expected value vars
+        variable expected   : std_logic_vector(31 downto 0);
+        variable expected_n : std_logic;
+        variable expected_z : std_logic;
+    begin
+        
 
         -----------------------------------------------------------------
         -- Test 1: AND (0000)

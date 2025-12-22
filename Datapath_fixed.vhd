@@ -42,6 +42,7 @@ architecture Behavioral of Datapath is
     signal imm_in               : std_logic_vector(15 downto 0);
     signal imm_ext              : std_logic_vector(31 downto 0); -- fixed to 32 bits
     signal alu_src_b, alu_result: std_logic_vector(31 downto 0);
+	 signal nflag_i : std_logic;
 
     -- Branch / PC signals
     signal branch_taken         : std_logic;
@@ -108,7 +109,7 @@ reg9_out     => debug_reg9,
             data2   => alu_src_b,
             aluop   => aluoperation,
             dataout => alu_result,
-            nflag   => nflag,
+            nflag   => nflag_i,
             zflag   => zero
         );
     aluout <= alu_result;
@@ -139,7 +140,7 @@ reg9_out     => debug_reg9,
     -- 9. Branch logic
     branch_taken <= '1' when
     (branch = '1' and branch_type = "01" and zero = '1') or
-    (branch = '1' and branch_type = "10" and (zero = '1' or nflag = '1'))
+    (branch = '1' and branch_type = "10" and (zero = '1' or nflag_i = '1'))
 else
     '0';
 

@@ -32,6 +32,8 @@ architecture Behavioral of RegisterFile is
     signal load : std_logic_vector(31 downto 0);
 signal next_val : std_logic_vector(31 downto 0);
 signal reg_input : std_logic_vector(31 downto 0);
+signal data1_i : std_logic_vector(31 downto 0);
+signal data2_i : std_logic_vector(31 downto 0);
     --32 registers
     signal r0,  r1,  r2,  r3,
            r4,  r5,  r6,  r7,
@@ -67,7 +69,7 @@ reg9_out <= r9;
 -- If auto_incr is 1, we use the +4 value. Otherwise, we use normal write_data.
    reg_input <= next_val when auto_incr = '1' else write_data;
 -- 32 FlopR register instances
-next_val <= std_logic_vector(unsigned(data1) + 4);
+next_val <= std_logic_vector(unsigned(data1_i) + 4);
 REG0: entity work.FlopR port map(clk, reset, '0', x"00000000", r0); 
 REG1: entity work.FlopR port map(clk, reset, load(1), reg_input, r1);
 REG2: entity work.FlopR port map(clk, reset, load(2), reg_input, r2);
@@ -113,7 +115,7 @@ REG31: entity work.FlopR port map(clk, reset, load(31), reg_input, r31);
             din20 => r20, din21 => r21, din22 => r22, din23 => r23,
             din24 => r24, din25 => r25, din26 => r26, din27 => r27,
             din28 => r28, din29 => r29, din30 => r30, din31 => r31,
-            dout => data1
+            dout => data1_i
         );
 
 -- Mux for read port 2
@@ -128,7 +130,7 @@ REG31: entity work.FlopR port map(clk, reset, load(31), reg_input, r31);
             din20 => r20, din21 => r21, din22 => r22, din23 => r23,
             din24 => r24, din25 => r25, din26 => r26, din27 => r27,
             din28 => r28, din29 => r29, din30 => r30, din31 => r31,
-            dout => data2
+            dout => data2_i
         );
 
 end Behavioral;
