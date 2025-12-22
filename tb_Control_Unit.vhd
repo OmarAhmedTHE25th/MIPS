@@ -21,9 +21,77 @@ architecture Behavioral of tb_Control_Unit is
 
     -- helper variable to track any failures
     signal any_fail : boolean := false;
-
+    -- small procedure to compare expected vs actual and report
+procedure check_signals(
+        testname      : in string;
+        exp_RegDst    : in std_logic;
+        exp_ALUSrc    : in std_logic;
+        exp_MemtoReg  : in std_logic;
+        exp_RegWrite  : in std_logic;
+        exp_MemRead   : in std_logic;
+        exp_MemWrite  : in std_logic;
+        exp_Branch    : in std_logic;
+        exp_Jump      : in std_logic;
+        exp_BranchType: in std_logic_vector(1 downto 0);
+        exp_ALUOp     : in std_logic_vector(3 downto 0)
+    ) is
 begin
+    wait for 10 ns;
+            if RegDst /= exp_RegDst then
+            report "FAIL: " & testname  severity failure;
+            any_fail <= true;
+        end if;
 
+        if not any_fail then
+            report "PASS: " & testname severity note;
+        else
+            any_fail <= false;
+        end if;
+        if ALUSrc /= exp_ALUSrc then
+            report "FAIL: " & testname  severity failure;
+            any_fail <= true;
+        end if;
+        if MemtoReg /= exp_MemtoReg then
+            report "FAIL: " & testname severity failure;
+            any_fail <= true;
+        end if;
+        if RegWrite /= exp_RegWrite then
+            report "FAIL: " & testname severity failure;
+            any_fail <= true;
+        end if;
+        if MemRead /= exp_MemRead then
+            report "FAIL: " & testname severity failure;
+            any_fail <= true;
+        end if;
+        if MemWrite /= exp_MemWrite then
+            report "FAIL: " & testname  severity failure;
+            any_fail <= true;
+        end if;
+        if Branch /= exp_Branch then
+            report "FAIL: " & testname & " - Branch expected " severity failure;
+            any_fail <= true;
+        end if;
+        if Jump /= exp_Jump then
+            report "FAIL: " & testname & " - Jump expected "  severity failure;
+            any_fail <= true;
+        end if;
+        if BranchType /= exp_BranchType then
+            report "FAIL: " & testname & " - BranchType expected " severity failure;
+            any_fail <= true;
+        end if;
+        if ALUOp /= exp_ALUOp then
+            report "FAIL: " & testname & " - ALUOp expected " severity failure;
+            any_fail <= true;
+        end if;
+
+        if not any_fail then
+            report "PASS: " & testname severity note;
+        else
+            any_fail <= false; -- reset for next test
+        end if;
+
+ end procedure;
+  begin
     -- instantiate the Control Unit under test
     DUT: entity work.Control_Unit
         port map(
@@ -40,70 +108,11 @@ begin
             ALUOp      => ALUOp
         );
 
-    -- small procedure to compare expected vs actual and report
-    procedure check_signals(
-        testname      : in string;
-        exp_RegDst    : in std_logic;
-        exp_ALUSrc    : in std_logic;
-        exp_MemtoReg  : in std_logic;
-        exp_RegWrite  : in std_logic;
-        exp_MemRead   : in std_logic;
-        exp_MemWrite  : in std_logic;
-        exp_Branch    : in std_logic;
-        exp_Jump      : in std_logic;
-        exp_BranchType: in std_logic_vector(1 downto 0);
-        exp_ALUOp     : in std_logic_vector(3 downto 0)
-    ) is
-    begin
-        wait for 10 ns; -- allow combinational outputs to settle
-
-        if RegDst /= exp_RegDst then
-            report "FAIL: " & testname & " - RegDst expected " & exp_RegDst & " got " & RegDst severity failure;
-            any_fail <= true;
-        end if;
-        if ALUSrc /= exp_ALUSrc then
-            report "FAIL: " & testname & " - ALUSrc expected " & exp_ALUSrc & " got " & ALUSrc severity failure;
-            any_fail <= true;
-        end if;
-        if MemtoReg /= exp_MemtoReg then
-            report "FAIL: " & testname & " - MemtoReg expected " & exp_MemtoReg & " got " & MemtoReg severity failure;
-            any_fail <= true;
-        end if;
-        if RegWrite /= exp_RegWrite then
-            report "FAIL: " & testname & " - RegWrite expected " & exp_RegWrite & " got " & RegWrite severity failure;
-            any_fail <= true;
-        end if;
-        if MemRead /= exp_MemRead then
-            report "FAIL: " & testname & " - MemRead expected " & exp_MemRead & " got " & MemRead severity failure;
-            any_fail <= true;
-        end if;
-        if MemWrite /= exp_MemWrite then
-            report "FAIL: " & testname & " - MemWrite expected " & exp_MemWrite & " got " & MemWrite severity failure;
-            any_fail <= true;
-        end if;
-        if Branch /= exp_Branch then
-            report "FAIL: " & testname & " - Branch expected " & exp_Branch & " got " & Branch severity failure;
-            any_fail <= true;
-        end if;
-        if Jump /= exp_Jump then
-            report "FAIL: " & testname & " - Jump expected " & exp_Jump & " got " & Jump severity failure;
-            any_fail <= true;
-        end if;
-        if BranchType /= exp_BranchType then
-            report "FAIL: " & testname & " - BranchType expected " & exp_BranchType & " got " & BranchType severity failure;
-            any_fail <= true;
-        end if;
-        if ALUOp /= exp_ALUOp then
-            report "FAIL: " & testname & " - ALUOp expected " & exp_ALUOp & " got " & ALUOp severity failure;
-            any_fail <= true;
-        end if;
-
-        if not any_fail then
-            report "PASS: " & testname severity note;
-        else
-            any_fail <= false; -- reset for next test
-        end if;
-    end procedure;
+    
+   
+      
+        
+   
 
     -- stimulus process: exercises each opcode implemented in the Control Unit
     stim_proc: process

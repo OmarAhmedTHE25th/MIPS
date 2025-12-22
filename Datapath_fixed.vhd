@@ -137,9 +137,12 @@ reg9_out     => debug_reg9,
         );
 
     -- 9. Branch logic
-    branch_taken <=
-        (branch = '1' and branch_type = "01" and zero = '1') or  -- BEQ
-        (branch = '1' and branch_type = "10" and (zero = '1' or nflag = '1')); -- BLE
+    branch_taken <= '1' when
+    (branch = '1' and branch_type = "01" and zero = '1') or
+    (branch = '1' and branch_type = "10" and (zero = '1' or nflag = '1'))
+else
+    '0';
+
 
     -- 10. PC logic
     pc_plus4 <= std_logic_vector(unsigned(pc_current) + 1);
