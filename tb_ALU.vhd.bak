@@ -32,51 +32,53 @@ architecture Behavioral of tb_ALU is
     signal zflag_s   : std_logic;
 
     ----------------------------------------------------------------
-    -- Expected value holder
+    -- Expected value holders 
     ----------------------------------------------------------------
     signal expected   : std_logic_vector(31 downto 0);
+    signal expected_n : std_logic;
+    signal expected_z : std_logic;
+
     ----------------------------------------------------------------
     -- Helper procedure 
     ----------------------------------------------------------------
-procedure check_expectation(op_name : in string) is
-    variable exp_n : std_logic;
-    variable exp_z : std_logic;
-begin
-    wait for 20 ns;
+    procedure check_expectation(op_name : in string) is
+    begin
+        wait for 20 ns;
 
-    -- expected_z
-    if expected = x"00000000" then
-        exp_z := '1';
-    else
-        exp_z := '0';
-    end if;
+        -- expected_z
+        if expected = (others => '0') then
+            expected_z <= '1';
+        else
+            expected_z <= '0';
+        end if;
 
-    -- expected_n
-    exp_n := expected(31);
+        -- expected_n
+        expected_n <= expected(31);
 
-    if dataout_s /= expected then
-        report "FAIL: " & op_name & " DATAOUT mismatch"
-        severity failure;
-    end if;
+        wait for 1 ns; -- allow flags to update
 
-    if nflag_s /= exp_n then
-        report "FAIL: " & op_name & " NFLAG mismatch"
-        severity failure;
-    end if;
+        if dataout_s /= expected then
+            report "FAIL: " & op_name & " DATAOUT mismatch"
+            severity failure;
+        end if;
 
-    if zflag_s /= exp_z then
-        report "FAIL: " & op_name & " ZFLAG mismatch"
-        severity failure;
-    end if;
+        if nflag_s /= expected_n then
+            report "FAIL: " & op_name & " NFLAG mismatch"
+            severity failure;
+        end if;
 
-    report "PASS: " & op_name &
-           " result=" &
-           integer'image(to_integer(signed(dataout_s)))
-           severity note;
+        if zflag_s /= expected_z then
+            report "FAIL: " & op_name & " ZFLAG mismatch"
+            severity failure;
+        end if;
 
-    wait for 30 ns;
-end procedure;
+        report "PASS: " & op_name &
+               " result=" &
+               integer'image(to_integer(signed(dataout_s)))
+               severity note;
 
+        wait for 30 ns;
+    end procedure;
 
 begin
 

@@ -26,11 +26,7 @@ begin
         end case;
 
         dataout <= std_logic_vector(result);
-        if result = 0 then
-    zflag <= '1';
-else
-    zflag <= '0';
-end if;
+        zflag   <= '1' when result = 0 else '0';
         nflag   <= result(31);
     end process;
 end Behavioral;

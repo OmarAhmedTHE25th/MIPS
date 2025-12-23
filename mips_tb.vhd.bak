@@ -38,7 +38,7 @@ begin
         );
 
     -- 5. Clock Generation Process
-    clk_process : process
+   clk_process : process
 begin
     while true loop
         clk <= '0';
@@ -47,7 +47,13 @@ begin
         wait for clk_period/2;
     end loop;
 end process;
-
+ clk_process : process
+    begin
+        clk <= '0';
+        wait for clk_period/2;
+        clk <= '1';
+        wait for clk_period/2;
+    end process;
 
     -- 6. Stimulus Process
     stim_proc: process

@@ -211,30 +211,4 @@ end if;
         report "All tests finished." severity note;
         wait;
     end process;
-
-    ---------------------------------------------------------
-    -- Behavioral stubs for components used by Datapath
-    -- These are included in the testbench to make the test self-contained.
-    ---------------------------------------------------------
-
-    -- Simple 32x32 RegisterFile (entity name RegisterFile)
-    -- Expose instance as RF_inst so testbench can poke/check mem contents.
-    
-
-    -- Instantiate a named register-file instance (definition below)
-    RF_inst: entity work.RegisterFile
-        port map(
-            read_sel1 => open, -- we will refer to RF_inst.mem directly in testbench checks
-            read_sel2 => open,
-            write_sel => open,
-            write_ena => open,
-            clk => open,
-            reset => open,
-            write_data => open,
-            data1 => open,
-            data2 => open,
-            auto_incr => open
-        );
-
-    -- Provide the register file entity/architecture below
 end Behavioral;

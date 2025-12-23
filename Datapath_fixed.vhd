@@ -116,6 +116,7 @@ begin
             zflag   => zero
         );
     aluout <= alu_result;
+    nflag <= nflag_i;
 
     -- 7. LWR Merge Logic
     process(read_data, write_data, alu_result)

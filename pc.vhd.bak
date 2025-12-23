@@ -32,9 +32,8 @@ end PC;
 architecture Behavioral of PC is
 signal reg_out: std_logic_vector(31 downto 0);
 signal pc_ext : std_logic_vector(31 downto 0);
-
-begin
 pc_ext <= (31 downto 6 => '0') & pc_in;
+begin
 	FlopR: entity work.FlopR
 		port map(
 			clk => clk,

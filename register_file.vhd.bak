@@ -34,6 +34,8 @@ signal next_val : std_logic_vector(31 downto 0);
 signal reg_input : std_logic_vector(31 downto 0);
 signal data1_i : std_logic_vector(31 downto 0);
 signal data2_i : std_logic_vector(31 downto 0);
+data1 <= (others => '0');
+data2 <= (others => '0');
 
     --32 registers
     signal r0,  r1,  r2,  r3,
@@ -46,8 +48,7 @@ signal data2_i : std_logic_vector(31 downto 0);
            r28, r29, r30, r31 : std_logic_vector(31 downto 0);
 
 begin
-data1 <= (others => '0');
-data2 <= (others => '0');
+
 reg3_out <= r3;
 reg4_out <= r4;
 reg5_out <= r5;

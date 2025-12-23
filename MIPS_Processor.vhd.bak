@@ -60,7 +60,6 @@ begin
             MemWrite => MemWrite_s,
             Branch   => Branch_s,
             Jump     => Jump_s,
-        BranchType => branchtype_s,
             ALUOp    => ALUOp_s
         );
 

@@ -20,7 +20,6 @@ architecture Behavioral of tb_Control_Unit is
     signal ALUOp       : std_logic_vector(3 downto 0);
 
     -- helper variable to track any failures
-    signal any_fail : boolean := false;
     -- small procedure to compare expected vs actual and report
 procedure check_signals(
         testname      : in string;
@@ -35,59 +34,60 @@ procedure check_signals(
         exp_BranchType: in std_logic_vector(1 downto 0);
         exp_ALUOp     : in std_logic_vector(3 downto 0)
     ) is
+variable any_fail : boolean := false;
 begin
     wait for 10 ns;
             if RegDst /= exp_RegDst then
             report "FAIL: " & testname  severity failure;
-            any_fail <= true;
+            any_fail:=true;
         end if;
 
         if not any_fail then
             report "PASS: " & testname severity note;
         else
-            any_fail <= false;
+            any_fail := false;
         end if;
         if ALUSrc /= exp_ALUSrc then
             report "FAIL: " & testname  severity failure;
-            any_fail <= true;
+           any_fail := true;
         end if;
         if MemtoReg /= exp_MemtoReg then
             report "FAIL: " & testname severity failure;
-            any_fail <= true;
+            any_fail:= true;
         end if;
         if RegWrite /= exp_RegWrite then
             report "FAIL: " & testname severity failure;
-            any_fail <= true;
+            any_fail:=true;
         end if;
         if MemRead /= exp_MemRead then
             report "FAIL: " & testname severity failure;
-            any_fail <= true;
+            any_fail:=true;
         end if;
         if MemWrite /= exp_MemWrite then
             report "FAIL: " & testname  severity failure;
-            any_fail <= true;
+            any_fail:=true;
         end if;
         if Branch /= exp_Branch then
             report "FAIL: " & testname & " - Branch expected " severity failure;
-            any_fail <= true;
+            any_fail:=true;
         end if;
         if Jump /= exp_Jump then
             report "FAIL: " & testname & " - Jump expected "  severity failure;
-            any_fail <= true;
+            any_fail:=true;
         end if;
         if BranchType /= exp_BranchType then
             report "FAIL: " & testname & " - BranchType expected " severity failure;
-            any_fail <= true;
+            any_fail:=true;
         end if;
         if ALUOp /= exp_ALUOp then
             report "FAIL: " & testname & " - ALUOp expected " severity failure;
-            any_fail <= true;
+            any_fail:=true;
         end if;
 
         if not any_fail then
             report "PASS: " & testname severity note;
         else
-            any_fail <= false; -- reset for next test
+            any_fail:=false; -- reset for next test
         end if;
 
  end procedure;
