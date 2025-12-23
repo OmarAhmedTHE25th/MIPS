@@ -4,7 +4,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity inst_mem is
     port(
-        a  : in  std_logic_vector(5 downto 0); -- 6-bit address from PC
+        a  : in  std_logic_vector(7 downto 2); -- 6-bit address from PC
         rd : out std_logic_vector(31 downto 0) -- 32-bit instruction output
     );
 end inst_mem;

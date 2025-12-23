@@ -19,7 +19,7 @@ architecture Behavioral of MIPS_Processor is
 
     -- Data Signals
     signal instruction, alu_out, mem_read_data, reg_write_data : std_logic_vector(31 downto 0);
-    signal PC : std_logic_vector(5 downto 0);
+    signal PC : std_logic_vector(7 downto 2);
 
 begin
 

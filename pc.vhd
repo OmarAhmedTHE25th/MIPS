@@ -24,8 +24,8 @@ entity PC is
     Port(
         clk    : in  std_logic;
         reset  : in  std_logic;
-        pc_in  : in  std_logic_vector(5 downto 0);
-        pc_out : out std_logic_vector(5 downto 0)
+        pc_in  : in  std_logic_vector(7 downto 2);
+        pc_out : out std_logic_vector(7 downto 2)
     );
 end PC;
 
