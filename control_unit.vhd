@@ -76,13 +76,17 @@ begin
                 MemRead     <= '1';
                 ALUOp       <= "0010";
                 Jump        <= '1';
-            when "100111" => -- LW_INCR
-                RegDst      <= '0';
-                ALUSrc      <= '1';
-                MemtoReg    <= '1';
-                RegWrite    <= '1';
-                MemRead     <= '1';
-                ALUOp       <= "0010";
+                
+-- LWR (Load Word Right)
+-- Purpose: replace the right (LSB) portion of rt with bytes from memory
+-- at address base+offset, number of bytes determined by address[1:0]
+            when "100111" => -- LWR
+                RegDst      <= '0';  -- write to rt
+                ALUSrc      <= '1'; -- addr = base + signext(imm)
+                MemtoReg    <= '1'; -- write back from memory/merge path
+                RegWrite    <= '1'; -- enable register write
+                MemRead     <= '1'; -- read data memory
+                ALUOp       <= "0010";  -- ADD for address calc
                 Branch      <= '0';
                 Jump        <= '1';
             when others =>
@@ -90,3 +94,19 @@ begin
         end case;
     end process;
 end Behavioral;
+--Note:
+--Jump doesn't just mean 'update PC'. In the full processor, 
+--it's safe because the Control Unit outputs a unique combination of signals.
+--For example, a real J instruction has RegWrite = '0'.
+--But my LWR and LW_INCR instructions have RegWrite = '1'. 
+--So even though Jump is high for all of them, the rest of the system (like the Register File write enable) knows the difference.
+--The processor won't get confused because the state of the other control signals effectively separates the 'Jump' behavior from the 'Load' behavior.
+
+
+
+
+
+
+
+
+

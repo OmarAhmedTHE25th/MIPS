@@ -27,7 +27,7 @@ begin
     PCSrc <= Branch_s AND zero_flag;
 
     -- 1. Datapath Instance
-    -- Note: Added 'jump' port to handle the Jump control signal
+ 
     Datapath_Inst: entity work.Datapath
         port map(
             clk           => clk,

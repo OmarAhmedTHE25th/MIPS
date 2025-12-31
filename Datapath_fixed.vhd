@@ -118,19 +118,24 @@ begin
     aluout <= alu_result;
     nflag <= nflag_i;
 
-    -- 7. LWR Merge Logic
+
+-- 7. LWR merge logic (little-endian):
+-- alu_result(1 downto 0) selects how many rightmost bytes come from memory.
+-- read_data: 32-bit word from memory containing the addressed byte
+-- write_data: current value of rt (before write-back)
+
     process(read_data, write_data, alu_result)
     begin
         case alu_result(1 downto 0) is
-            when "00" => lwr_merged_data <= read_data;
-            when "01" => lwr_merged_data <= write_data(31 downto 24) & read_data(23 downto 0);
-            when "10" => lwr_merged_data <= write_data(31 downto 16) & read_data(15 downto 0);
-            when "11" => lwr_merged_data <= write_data(31 downto 8) & read_data(7 downto 0);
+            when "00" => lwr_merged_data <= read_data;-- aligned: take full word from memory
+            when "01" => lwr_merged_data <= write_data(31 downto 24) & read_data(23 downto 0); -- replace 3 LSB bytes from memory, keep MSB from rt
+            when "10" => lwr_merged_data <= write_data(31 downto 16) & read_data(15 downto 0);-- replace 2 LSB bytes from memory, keep top 2 from rt
+            when "11" => lwr_merged_data <= write_data(31 downto 8) & read_data(7 downto 0);-- replace 1 LSB byte from memory, keep top 3 from rt
             when others => lwr_merged_data <= read_data;
         end case;
     end process;
-
-    data_to_mux <= lwr_merged_data;  -- simplified for LW/LWR
+-- Feed write-back mux when MemtoReg='1'
+    data_to_mux <= lwr_merged_data;  
 zero_i <= '1' when alu_result = x"00000000" else '0';
     -- 8. Write-back MUX
     Write_Back_Mux: entity work.mux2to1_32bit

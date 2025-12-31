@@ -72,6 +72,8 @@ reg9_out <= r9;
    reg_input <= next_val when auto_incr = '1' else write_data;
 -- 32 FlopR register instances
 next_val <= std_logic_vector(unsigned(data1_i) + 4);
+
+
 REG0: entity work.FlopR port map(clk, reset, '0', x"00000000", r0); 
 REG1: entity work.FlopR port map(clk, reset, load(1), reg_input, r1);
 REG2: entity work.FlopR port map(clk, reset, load(2), reg_input, r2);
